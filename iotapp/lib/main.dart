@@ -64,10 +64,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                   widthButton: Setting.sizeLarge,
                                   heightButton: Setting.sizeMedium,
                                 ),
-                      title: const TextUrlWidget(
-                        label: "Lien Github",
-                        url: "https://github.com",
-                        ),
+                      title: const Text('Bouton droite'),
+                    ),
+                    const TextUrlWidget(
+                      label: "Lien Github",
+                      url: "https://github.com/QuentinKevin/IOT-Application-Flutter",
                     ),
                   ],
                 ),
