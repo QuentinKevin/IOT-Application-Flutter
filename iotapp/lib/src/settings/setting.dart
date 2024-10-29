@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Setting {
   static const double paddingSmall = 12.0;
   static const double paddingMedium = 20.0;
-  static const double paddingLarge = 25.0;
+  static const double paddingLarge = 150.0;
 
   static const double sizeSmall = 12.0;
   static const double sizeMedium = 20.0;

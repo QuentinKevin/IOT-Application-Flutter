@@ -46,7 +46,9 @@ class _MyHomePageState extends State<MyHomePage> {
           child:
             ListView(
                   children: <Widget>[
-                    ListTile(
+                    Padding(
+                        padding: const EdgeInsets.fromLTRB(Setting.paddingLarge, 0, 0,0),
+                        child: ListTile(
                       leading: StatusWidget(
                                   label: "",
                                   status: false,
@@ -54,21 +56,43 @@ class _MyHomePageState extends State<MyHomePage> {
                                   widthButton: Setting.sizeLarge,
                                   heightButton: Setting.sizeMedium,
                       ),  
-                      title: const Text('Bouton gauche'),
+                      title: const Text("C'est pas Versailles ici"),
+                      ),
                     ),
-                    ListTile(
+                    Padding(
+                        padding: const EdgeInsets.fromLTRB(Setting.paddingLarge, 0, 0,0),
+                        child: ListTile(
                       leading: StatusWidget(
                                   label: "",
-                                  status: false,
+                                  status: true,
                                   buttonColor: Colors.purple,
                                   widthButton: Setting.sizeLarge,
                                   heightButton: Setting.sizeMedium,
                                 ),
-                      title: const Text('Bouton droite'),
+                      title: const Text('Programme Routingue'),
+                        ),
                     ),
+                    Padding(
+                        padding: const EdgeInsets.fromLTRB(Setting.paddingLarge, 0, 0,0),
+                        child: ListTile(
+                      leading: StatusWidget(
+                                  label: "",
+                                  status: true,
+                                  buttonColor: Colors.purple,
+                                  widthButton: Setting.sizeLarge,
+                                  heightButton: Setting.sizeMedium,
+                                ),
+                      title: const Text('Programme Vacance'),
+                        ),
+                    ),
+
                     const TextUrlWidget(
                       label: "Lien Github",
                       url: "https://github.com/QuentinKevin/IOT-Application-Flutter",
+                    ),
+                    const TextUrlWidget(
+                      label: "Lien Figma",
+                      url: "https://www.figma.com/design/JfYg0CGDHf6rhzzkOCydZv/IOT-Application?node-id=13-61&node-type=instance&t=syIlL1rSvyzmCFA0-0",
                     ),
                   ],
                 ),
