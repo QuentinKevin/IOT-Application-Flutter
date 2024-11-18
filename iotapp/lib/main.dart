@@ -18,8 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromRGBO(47, 80, 52, 1),
             brightness: Brightness.dark,
-            contrastLevel: 1.0
-          ),
+            contrastLevel: 1.0),
         useMaterial3: true,
       ),
       home: const Center(child: MyHomePage(title: 'IOT Application')),
@@ -47,7 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           children: <Widget>[
             Center(
-              child: Text(widget.title, textScaler: const TextScaler.linear(2.0),),
+              child:
+                  Text(widget.title, textScaler: const TextScaler.linear(2.0)),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(
