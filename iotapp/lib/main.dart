@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iotapp/src/settings/setting.dart';
+import 'package:iotapp/src/widgets/iconValueWidget/iconValueWidget.dart';
 import 'package:iotapp/src/widgets/statusWidget/statusWidget.dart';
 import 'package:iotapp/src/widgets/textUrlWidget/textUrlWidget.dart';
 
@@ -54,9 +55,21 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          const SizedBox(height: 20), // Espacement entre le titre et les boutons
-
-          // Boutons et leurs textes associés centrés
+          const SizedBox(height: 20),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              IconValueWidget(
+                  icon: Icons.thermostat,
+                  value: "21°C",
+                  iconColor: Color.fromARGB(255, 206, 3, 3)),
+              IconValueWidget(
+                  icon: Icons.water_drop,
+                  value: "57%",
+                  iconColor: Color.fromARGB(255, 7, 135, 194))
+            ],
+          ),
+          const SizedBox(height: 20),
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
