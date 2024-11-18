@@ -42,14 +42,13 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(47, 80, 52, 1),
-      appBar: AppBar(
-        title: Center(child: Text(widget.title)),
-        backgroundColor: Colors.transparent,
-      ),
       body: Container(
         alignment: Alignment.center,
         child: ListView(
           children: <Widget>[
+            Center(
+              child: Text(widget.title, textScaler: const TextScaler.linear(2.0),),
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(
                   Setting.paddingLarge, Setting.paddingSmall, 0, 0),
