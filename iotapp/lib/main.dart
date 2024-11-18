@@ -114,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       widthButton: Setting.sizeLarge,
                       heightButton: Setting.sizeMedium,
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 20),
                     const Text("Programme Vacance"),
                   ],
                 ),
