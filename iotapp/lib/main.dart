@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iotapp/src/settings/setting.dart';
+import 'package:iotapp/src/widgets/iconValueWidget/iconValueWidget.dart';
 import 'package:iotapp/src/widgets/statusWidget/statusWidget.dart';
 import 'package:iotapp/src/widgets/textUrlWidget/textUrlWidget.dart';
 
@@ -46,10 +47,15 @@ class _MyHomePageState extends State<MyHomePage> {
           child:
             ListView(
                   children: <Widget>[
+                    const IconValueWidget(
+                      icon: Icons.thermostat,
+                      value: "21°C",
+                      iconColor: Colors.red
+                    ),
                     Padding(
                         padding: const EdgeInsets.fromLTRB(Setting.paddingLarge, 0, 0,0),
                         child: ListTile(
-                      leading: StatusWidget(
+                        leading: StatusWidget(
                                   label: "",
                                   status: false,
                                   buttonColor: Colors.purple,
@@ -62,20 +68,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     Padding(
                         padding: const EdgeInsets.fromLTRB(Setting.paddingLarge, 0, 0,0),
                         child: ListTile(
-                      leading: StatusWidget(
-                                  label: "",
-                                  status: true,
-                                  buttonColor: Colors.purple,
-                                  widthButton: Setting.sizeLarge,
-                                  heightButton: Setting.sizeMedium,
-                                ),
-                      title: const Text('Programme Routingue'),
+                              leading: StatusWidget(
+                                label: "",
+                                status: true,
+                                buttonColor: Colors.purple,
+                                widthButton: Setting.sizeLarge,
+                                heightButton: Setting.sizeMedium,
+                              ),
+                          title: const Text('Programme Routingue'),
                         ),
                     ),
                     Padding(
                         padding: const EdgeInsets.fromLTRB(Setting.paddingLarge, 0, 0,0),
                         child: ListTile(
-                      leading: StatusWidget(
+                        leading: StatusWidget(
                                   label: "",
                                   status: true,
                                   buttonColor: Colors.purple,
