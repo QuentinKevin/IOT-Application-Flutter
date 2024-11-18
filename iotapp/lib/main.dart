@@ -15,10 +15,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'IOT APP',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromRGBO(47, 80, 52, 1),
+          brightness: Brightness.dark,
+          contrastLevel: 1.0
+          ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'IOT Application'),
+      home: const Center(child: MyHomePage(title: 'IOT Application')),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -37,9 +41,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(47, 80, 52, 1),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Center(child: Text(widget.title)),
+        backgroundColor: Colors.transparent,
       ),
       body: Container(
           alignment: Alignment.center,
