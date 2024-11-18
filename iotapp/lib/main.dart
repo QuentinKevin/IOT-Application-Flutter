@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromRGBO(47, 80, 52, 1),
             brightness: Brightness.dark,
-            contrastLevel: 1.0),
+            contrastLevel: 1.0
+          ),
         useMaterial3: true,
       ),
       home: const Center(child: MyHomePage(title: 'IOT Application')),

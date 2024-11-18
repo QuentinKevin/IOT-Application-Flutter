@@ -14,8 +14,8 @@ class StatusWidget extends StatefulWidget {
     required this.label,
     required this.status,
     required this.buttonColor,
-    this.widthButton = 200, // Largeur par défaut augmentée
-    this.heightButton = 60, // Hauteur par défaut augmentée
+    this.widthButton = 200,
+    this.heightButton = 60,
   });
 
   @override
@@ -38,24 +38,24 @@ class _StatusWidget extends State<StatusWidget> implements CellStatusWidget {
           });
         },
         style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(Colors.transparent), // Fond transparent
+          backgroundColor: WidgetStateProperty.all(Colors.transparent),
           side: WidgetStateProperty.all(
             BorderSide(
-              color: status ? Colors.green : Colors.red, // Bordure verte ou rouge
-              width: 2, // Épaisseur de la bordure
+              color: status ? Colors.green : Colors.red,
+              width: 2,
             ),
           ),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12), // Coins arrondis
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
         ),
         child: Text(
           widget.label,
           style: TextStyle(
-            color: status ? Colors.green : Colors.red, // Couleur du texte
-            fontSize: 18, // Taille du texte augmentée
+            color: status ? Colors.green : Colors.red,
+            fontSize: 18,
           ),
         ),
       ),
