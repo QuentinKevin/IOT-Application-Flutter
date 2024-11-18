@@ -122,18 +122,23 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
 
-          const SizedBox(height: 20), // Espacement avant les liens
-
-          // Liens en bas
-          const TextUrlWidget(
-            label: "Lien Github",
-            url: "https://github.com/QuentinKevin/IOT-Application-Flutter",
-          ),
-          const SizedBox(height: 10),
-          const TextUrlWidget(
-            label: "Lien Figma",
-            url:
-                "https://www.figma.com/design/JfYg0CGDHf6rhzzkOCydZv/IOT-Application?node-id=13-61&node-type=instance&t=syIlL1rSvyzmCFA0-0",
+          const SizedBox(height: 20),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(Icons.hub),
+              TextUrlWidget(
+                label: "Lien Github",
+                url: "https://github.com/QuentinKevin/IOT-Application-Flutter",
+              ),
+              SizedBox(width: 20),
+              Icon(Icons.flutter_dash),
+              TextUrlWidget(
+                label: "Lien Figma",
+                url:
+                    "https://www.figma.com/design/JfYg0CGDHf6rhzzkOCydZv/IOT-Application?node-id=13-61&node-type=instance&t=syIlL1rSvyzmCFA0-0",
+              ),
+            ],
           ),
         ],
       ),
