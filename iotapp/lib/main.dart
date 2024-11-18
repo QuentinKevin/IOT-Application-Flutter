@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
             contrastLevel: 1.0),
         useMaterial3: true,
       ),
-      home: const Center(child: MyHomePage(title: 'IOT Application')),
+      home: const MyHomePage(title: 'IOT Application'),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -41,67 +41,88 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(47, 80, 52, 1),
-      body: Container(
-        alignment: Alignment.center,
-        child: ListView(
-          children: <Widget>[
-            Center(
-              child:
-                  Text(widget.title, textScaler: const TextScaler.linear(2.0)),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                  Setting.paddingLarge, Setting.paddingSmall, 0, 0),
-              child: ListTile(
-                leading: StatusWidget(
-                  label: "",
-                  status: false,
-                  buttonColor: Colors.purple,
-                  widthButton: Setting.sizeLarge,
-                  heightButton: Setting.sizeMedium,
-                ),
-                title: const Text("C'est pas Versailles ici"),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: <Widget>[
+          // Titre principal
+          Center(
+            child: Text(
+              widget.title,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                  Setting.paddingLarge, Setting.paddingSmall, 0, 0),
-              child: ListTile(
-                leading: StatusWidget(
-                  label: "",
-                  status: true,
-                  buttonColor: Colors.purple,
-                  widthButton: Setting.sizeLarge,
-                  heightButton: Setting.sizeMedium,
+          ),
+          const SizedBox(height: 20), // Espacement entre le titre et les boutons
+
+          // Boutons et leurs textes associés centrés
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    StatusWidget(
+                      label: "",
+                      status: false,
+                      buttonColor: Colors.purple,
+                      widthButton: Setting.sizeLarge,
+                      heightButton: Setting.sizeMedium,
+                    ),
+                    const SizedBox(width: 10),
+                    const Text("C'est pas Versailles ici"),
+                  ],
                 ),
-                title: const Text('Programme Routingue'),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                  Setting.paddingLarge, Setting.paddingSmall, 0, 0),
-              child: ListTile(
-                leading: StatusWidget(
-                  label: "",
-                  status: true,
-                  buttonColor: Colors.purple,
-                  widthButton: Setting.sizeLarge,
-                  heightButton: Setting.sizeMedium,
+                const SizedBox(height: 20), // Espacement entre les lignes
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    StatusWidget(
+                      label: "",
+                      status: true,
+                      buttonColor: Colors.purple,
+                      widthButton: Setting.sizeLarge,
+                      heightButton: Setting.sizeMedium,
+                    ),
+                    const SizedBox(width: 10),
+                    const Text("Programme Routingue"),
+                  ],
                 ),
-                title: const Text('Programme Vacance'),
-              ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    StatusWidget(
+                      label: "",
+                      status: true,
+                      buttonColor: Colors.purple,
+                      widthButton: Setting.sizeLarge,
+                      heightButton: Setting.sizeMedium,
+                    ),
+                    const SizedBox(width: 10),
+                    const Text("Programme Vacance"),
+                  ],
+                ),
+              ],
             ),
-            const TextUrlWidget(
-              label: "Lien Github",
-              url: "https://github.com/QuentinKevin/IOT-Application-Flutter",
-            ),
-            const TextUrlWidget(
-              label: "Lien Figma",
-              url:
-                  "https://www.figma.com/design/JfYg0CGDHf6rhzzkOCydZv/IOT-Application?node-id=13-61&node-type=instance&t=syIlL1rSvyzmCFA0-0",
-            ),
-          ],
-        ),
+          ),
+
+          const SizedBox(height: 20), // Espacement avant les liens
+
+          // Liens en bas
+          const TextUrlWidget(
+            label: "Lien Github",
+            url: "https://github.com/QuentinKevin/IOT-Application-Flutter",
+          ),
+          const SizedBox(height: 10),
+          const TextUrlWidget(
+            label: "Lien Figma",
+            url:
+                "https://www.figma.com/design/JfYg0CGDHf6rhzzkOCydZv/IOT-Application?node-id=13-61&node-type=instance&t=syIlL1rSvyzmCFA0-0",
+          ),
+        ],
       ),
     );
   }
