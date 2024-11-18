@@ -16,10 +16,9 @@ class MyApp extends StatelessWidget {
       title: 'IOT APP',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromRGBO(47, 80, 52, 1),
-          brightness: Brightness.dark,
-          contrastLevel: 1.0
-          ),
+            seedColor: const Color.fromRGBO(47, 80, 52, 1),
+            brightness: Brightness.dark,
+            contrastLevel: 1.0),
         useMaterial3: true,
       ),
       home: const Center(child: MyHomePage(title: 'IOT Application')),
@@ -47,61 +46,63 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.transparent,
       ),
       body: Container(
-          alignment: Alignment.center,
-          child:
-            ListView(
-                  children: <Widget>[
-                    Padding(
-                        padding: const EdgeInsets.fromLTRB(Setting.paddingLarge, Setting.paddingSmall, 0,0),
-                        child: ListTile(
-                      leading: StatusWidget(
-                                  label: "",
-                                  status: false,
-                                  buttonColor: Colors.purple,
-                                  widthButton: Setting.sizeLarge,
-                                  heightButton: Setting.sizeMedium,
-                      ),  
-                      title: const Text("C'est pas Versailles ici"),
-                      ),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.fromLTRB(Setting.paddingLarge, Setting.paddingSmall, 0,0),
-                        child: ListTile(
-                      leading: StatusWidget(
-                                  label: "",
-                                  status: true,
-                                  buttonColor: Colors.purple,
-                                  widthButton: Setting.sizeLarge,
-                                  heightButton: Setting.sizeMedium,
-                                ),
-                      title: const Text('Programme Routingue'),
-                        ),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.fromLTRB(Setting.paddingLarge, Setting.paddingSmall, 0,0),
-                        child: ListTile(
-                      leading: StatusWidget(
-                                  label: "",
-                                  status: true,
-                                  buttonColor: Colors.purple,
-                                  widthButton: Setting.sizeLarge,
-                                  heightButton: Setting.sizeMedium,
-                                ),
-                      title: const Text('Programme Vacance'),
-                        ),
-                    ),
-
-                    const TextUrlWidget(
-                      label: "Lien Github",
-                      url: "https://github.com/QuentinKevin/IOT-Application-Flutter",
-                    ),
-                    const TextUrlWidget(
-                      label: "Lien Figma",
-                      url: "https://www.figma.com/design/JfYg0CGDHf6rhzzkOCydZv/IOT-Application?node-id=13-61&node-type=instance&t=syIlL1rSvyzmCFA0-0",
-                    ),
-                  ],
+        alignment: Alignment.center,
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                  Setting.paddingLarge, Setting.paddingSmall, 0, 0),
+              child: ListTile(
+                leading: StatusWidget(
+                  label: "",
+                  status: false,
+                  buttonColor: Colors.purple,
+                  widthButton: Setting.sizeLarge,
+                  heightButton: Setting.sizeMedium,
                 ),
+                title: const Text("C'est pas Versailles ici"),
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                  Setting.paddingLarge, Setting.paddingSmall, 0, 0),
+              child: ListTile(
+                leading: StatusWidget(
+                  label: "",
+                  status: true,
+                  buttonColor: Colors.purple,
+                  widthButton: Setting.sizeLarge,
+                  heightButton: Setting.sizeMedium,
+                ),
+                title: const Text('Programme Routingue'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                  Setting.paddingLarge, Setting.paddingSmall, 0, 0),
+              child: ListTile(
+                leading: StatusWidget(
+                  label: "",
+                  status: true,
+                  buttonColor: Colors.purple,
+                  widthButton: Setting.sizeLarge,
+                  heightButton: Setting.sizeMedium,
+                ),
+                title: const Text('Programme Vacance'),
+              ),
+            ),
+            const TextUrlWidget(
+              label: "Lien Github",
+              url: "https://github.com/QuentinKevin/IOT-Application-Flutter",
+            ),
+            const TextUrlWidget(
+              label: "Lien Figma",
+              url:
+                  "https://www.figma.com/design/JfYg0CGDHf6rhzzkOCydZv/IOT-Application?node-id=13-61&node-type=instance&t=syIlL1rSvyzmCFA0-0",
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
