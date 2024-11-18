@@ -126,13 +126,11 @@ class _MyHomePageState extends State<MyHomePage> {
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Icon(Icons.hub),
               TextUrlWidget(
                 label: "Lien Github",
                 url: "https://github.com/QuentinKevin/IOT-Application-Flutter",
               ),
               SizedBox(width: 20),
-              Icon(Icons.flutter_dash),
               TextUrlWidget(
                 label: "Lien Figma",
                 url:
