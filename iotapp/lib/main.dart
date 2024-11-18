@@ -56,6 +56,48 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           const SizedBox(height: 20),
+
+          // Écran LCD
+          Center(
+            child: Container(
+              width: 300,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.green[700], // Fond vert sombre
+                border: Border.all(
+                  color: Colors.black, // Bordure noire épaisse
+                  width: 4,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "This is a ",
+                      style: TextStyle(
+                    fontFamily: 'cf-lcd-521',
+                    fontSize: 24,
+                    color: Colors.lightGreenAccent,
+                  ),
+                    ),
+                    Text(
+                      "line LCD Display",
+                      style: TextStyle(
+                    fontFamily: 'cf-lcd-521',
+                    fontSize: 24,
+                    color: Colors.lightGreenAccent,
+                  ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Widgets température et humidité
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -70,6 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
           const SizedBox(height: 20),
+
+          // Boutons et leurs textes associés
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -88,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     const Text("C'est pas Versailles ici"),
                   ],
                 ),
-                const SizedBox(height: 20), // Espacement entre les lignes
+                const SizedBox(height: 20),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -123,6 +167,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
 
           const SizedBox(height: 20),
+
+          // Liens GitHub et Figma
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
