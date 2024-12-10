@@ -12,4 +12,13 @@ class Setting {
 
   static const Color activeColor = Color.fromARGB(255, 0, 140, 0);
   static const Color disableColor = Color.fromARGB(255, 140, 0, 0);
+
+//API
+  static const String API_URL ="https://iot-data-engineers-server.onrender.com/api";
+   
+  static const String EQUIPMENTS_ENDPOINT = "equipments";
+  static const String HOUSES_ENDPOINT = "houses";
+  static const String ROOMS_ENDPOINT = "rooms";
+  static const String HOUSE_ID = "KEVIN";
+
 }

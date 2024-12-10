@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:iotapp/src/services/MqttService.dart';
 import 'package:iotapp/src/settings/setting.dart';
 import 'package:iotapp/src/widgets/iconValueWidget/iconValueWidget.dart';
 import 'package:iotapp/src/widgets/statusWidget/statusWidget.dart';
 import 'package:iotapp/src/widgets/textUrlWidget/textUrlWidget.dart';
 
+import 'src/widgets/LCDScreenWidget/LCDScreenWidget.dart';
+import 'src/widgets/dynamiqueEquipment/dynamiqueEquipment.dart';
+import 'package:iotapp/src/services/Apiservice.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -22,26 +26,61 @@ class MyApp extends StatelessWidget {
             contrastLevel: 1.0),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'IOT Application'),
+      home: MyHomePage(title: 'IOT Application'),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
+// ignore: must_be_immutable
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  MyHomePage({super.key, required this.title});
 
   final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final MqttService mqttService = MqttService();
+  bool isConnected = false;
+  String connectionStatus = "Connexion en cours...";
+
+  @override
+  void initState() {
+    super.initState();
+    _connectToBroker();
+  }
+
+  Future<void> _connectToBroker() async {
+    try {
+      await mqttService.connect();
+      setState(() {
+        isConnected = true;
+        connectionStatus = "Connecté au broker MQTT !";
+      });
+    } catch (e) {
+      setState(() {
+        isConnected = false;
+        connectionStatus = "Erreur de connexion : $e";
+      });
+    }
+  }
+  Future<String> fetchHumidityValue(String equipmentId) async {
+    final data = await apiService.fetchEquipmentData(equipmentId);
+    return '${data['value']} ${data['unit']}'; // Récupère la valeur et l'unité
+  }
+  Future<String> fetchTemperatureValue(String equipmentId) async {
+    final data = await apiService.fetchEquipmentData(equipmentId);
+    return '${data['value']} ${data['unit']}'; // Exemple de valeur pour la température
+  }
+  ApiService apiService = ApiService('https://iot-data-engineers-server.onrender.com');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(47, 80, 52, 1),
+      // backgroundColor: const Color.fromARGB(59, 124, 124, 124),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
@@ -50,69 +89,52 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Text(
               widget.title,
               style: const TextStyle(
-                fontSize: 24,
+                fontFamily: 'PipBoyFont',
+                fontSize: 20,
+                color: Color(0xFF00FF00), // Vert fluo typique
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Indication de l'état de connexion
+          Center(
+            child: Text(
+              connectionStatus,
+              style: TextStyle(
+                fontFamily: 'PipBoyFont',
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
+                color: isConnected ? const Color(0xFF00FF00) : Colors.red,
               ),
             ),
           ),
           const SizedBox(height: 20),
 
           // Écran LCD
-          Center(
-            child: Container(
-              width: 300,
-              height: 100,
-              decoration: BoxDecoration(
-                color: Colors.green[700], // Fond vert sombre
-                border: Border.all(
-                  color: Colors.black, // Bordure noire épaisse
-                  width: 4,
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "This is a ",
-                      style: TextStyle(
-                    fontFamily: 'cf-lcd-521',
-                    fontSize: 24,
-                    color: Colors.lightGreenAccent,
-                  ),
-                    ),
-                    Text(
-                      "line LCD Display",
-                      style: TextStyle(
-                    fontFamily: 'cf-lcd-521',
-                    fontSize: 24,
-                    color: Colors.lightGreenAccent,
-                  ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          const Center(
+            child: LCDWidget(), // Ajout de l'écran LCD
           ),
           const SizedBox(height: 20),
 
           // Widgets température et humidité
-          const Row(
+           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               IconValueWidget(
-                  icon: Icons.thermostat,
-                  value: "21°C",
-                  iconColor: Color.fromARGB(255, 206, 3, 3)),
-              IconValueWidget(
-                  icon: Icons.water_drop,
-                  value: "57%",
-                  iconColor: Color.fromARGB(255, 7, 135, 194))
+                icon: Icons.water_drop,
+                futureValue: fetchHumidityValue('67298243-00e1-46fb-b94e-228c8d3e675b'),
+                iconColor: Colors.blue,
+              ),
+              // Widget pour la température
+            IconValueWidget(
+              icon: Icons.thermostat,
+              futureValue: fetchTemperatureValue('b8fe322b-5549-4627-990a-e62a6c43e381'),
+              iconColor: Colors.red,
+            ),
             ],
           ),
-          const SizedBox(height: 20),
-
+         
           // Boutons et leurs textes associés
           Center(
             child: Column(
@@ -122,14 +144,25 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     StatusWidget(
-                      label: "",
-                      status: false,
+                      label: "Turn On",
+                      initialStatus: false,
                       buttonColor: Colors.purple,
-                      widthButton: Setting.sizeLarge,
-                      heightButton: Setting.sizeMedium,
+                      widthButton: 200,
+                      heightButton: 60,
+                      onPressed: () {
+                        mqttService.publishMessage('home/lights', 'on');
+                      },
+                      mqttService: mqttService,
                     ),
                     const SizedBox(width: 10),
-                    const Text("C'est pas Versailles ici"),
+                    const Text("C'est pas Versailles ici",
+                      style: TextStyle(
+                        fontFamily: 'PipBoyFont',
+                        color: Color(0xFF00FF00), // Vert fluo typique
+                        backgroundColor: Color.fromARGB(38, 0, 255, 0), // Fond 
+                      ),
+                    ),
+                    
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -138,13 +171,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     StatusWidget(
                       label: "",
-                      status: true,
+                      initialStatus: true,
                       buttonColor: Colors.purple,
                       widthButton: Setting.sizeLarge,
                       heightButton: Setting.sizeMedium,
+                      onPressed: () {
+                        mqttService.publishMessage('routine/start', 'start');
+                      },
+                      mqttService: mqttService,
                     ),
                     const SizedBox(width: 10),
-                    const Text("Programme Routingue"),
+                    const Text("Programme Routingue",
+                      style: TextStyle(
+                        fontFamily: 'PipBoyFont',
+                        color: Color(0xFF00FF00), // Vert fluo typique
+                        backgroundColor: Color.fromARGB(38, 0, 255, 0), // Fond 
+                      ),
+                      ),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -153,13 +196,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     StatusWidget(
                       label: "",
-                      status: true,
+                      initialStatus: true,
                       buttonColor: Colors.purple,
                       widthButton: Setting.sizeLarge,
                       heightButton: Setting.sizeMedium,
+                      onPressed: () {
+                        mqttService.publishMessage('vacation/start', 'start');
+                      },
+                      mqttService: mqttService,
                     ),
                     const SizedBox(width: 20),
-                    const Text("Programme Vacance"),
+                    const Text("Programme Vacance",
+                      style: TextStyle(
+                        fontFamily: 'PipBoyFont',
+                        color: Color(0xFF00FF00), // Vert fluo typique
+                        backgroundColor: Color.fromARGB(38, 0, 255, 0), // Fond 
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -187,5 +240,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    mqttService.disconnect();
+    super.dispose();
   }
 }
