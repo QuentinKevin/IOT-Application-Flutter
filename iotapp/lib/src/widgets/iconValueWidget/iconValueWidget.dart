@@ -1,14 +1,15 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 class IconValueWidget extends StatefulWidget {
   final IconData icon;
-  final Future<String> futureValue; // Future pour récupérer les données dynamiquement
+  final Future<String> Function() fetchValue; // Fonction pour récupérer la valeur
   final Color iconColor;
 
   const IconValueWidget({
     super.key,
     required this.icon,
-    required this.futureValue,
+    required this.fetchValue,
     required this.iconColor,
   });
 
@@ -17,12 +18,35 @@ class IconValueWidget extends StatefulWidget {
 }
 
 class _IconValueWidgetState extends State<IconValueWidget> {
-  late Future<String> value; // Stocke la future valeur pour cet widget
+  String value = "Chargement...";
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
-    value = widget.futureValue; // Associe la future valeur initiale
+    _updateValue(); // Récupérer la valeur initiale
+    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      _updateValue(); // Mettre à jour la valeur toutes les 10 secondes
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel(); // Arrêter le timer lors de la destruction du widget
+    super.dispose();
+  }
+
+  Future<void> _updateValue() async {
+    try {
+      final newValue = await widget.fetchValue(); // Appelle la fonction passée pour récupérer la valeur
+      setState(() {
+        value = newValue;
+      });
+    } catch (e) {
+      setState(() {
+        value = "Erreur";
+      });
+    }
   }
 
   @override
@@ -32,20 +56,7 @@ class _IconValueWidgetState extends State<IconValueWidget> {
         children: [
           Icon(widget.icon, color: widget.iconColor),
           const SizedBox(width: 10),
-          FutureBuilder<String>(
-            future: value,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text('Chargement...');
-              } else if (snapshot.hasError) {
-                return const Text('Erreur');
-              } else if (snapshot.hasData) {
-                return Text(snapshot.data ?? 'N/A');
-              } else {
-                return const Text('N/A');
-              }
-            },
-          ),
+          Text(value),
         ],
       ),
     );

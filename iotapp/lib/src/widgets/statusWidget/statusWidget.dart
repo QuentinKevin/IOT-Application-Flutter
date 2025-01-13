@@ -10,6 +10,8 @@ class StatusWidget extends StatefulWidget {
   final double heightButton;
   final VoidCallback? onPressed; // Callback for custom actions
   final MqttService mqttService;
+  final String topic;
+  final List<String> message;
 
   const StatusWidget({
     super.key,
@@ -20,6 +22,8 @@ class StatusWidget extends StatefulWidget {
     this.heightButton = 60,
     this.onPressed,
     required this.mqttService,
+    required this.topic,
+    required this.message,
   });
 
   @override
@@ -31,6 +35,8 @@ class _StatusWidgetState extends State<StatusWidget>
   late bool status;
   late Color buttonColor;
   late MqttService mqttService;
+  late String topic;
+  late List<String> message;
 
   @override
   void initState() {
@@ -38,6 +44,8 @@ class _StatusWidgetState extends State<StatusWidget>
     status = widget.initialStatus; // Use initialStatus to set the starting state
     buttonColor = widget.buttonColor;
     mqttService = widget.mqttService;
+    topic = widget.topic;
+    message = widget.message;
   }
 
   @override
@@ -52,9 +60,10 @@ class _StatusWidgetState extends State<StatusWidget>
           });
           // Trigger the custom callback if provided
           if (widget.onPressed != null) {
-            // widget.onPressed!();
+            widget.onPressed!();
+          } else {
+            mqttService.publishMessage(topic, status ? message[0] : message[1]);
           }
-            mqttService.publishMessage('home/lights', status ? 'on' : 'off');
         },
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all(Colors.transparent),

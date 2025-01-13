@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:iotapp/src/services/MqttService.dart';
+import 'package:mqtt_client/mqtt_client.dart';
 
-
-class LCDWidget extends StatefulWidget {
+class LCDScreenWidget extends StatefulWidget {
   final int maxCharactersPerLine;
+  final MqttService mqttService; // Ajoutez cette ligne pour passer le service MQTT
 
-  const LCDWidget({
-    Key? key,
-    this.maxCharactersPerLine = 16, // Nombre de caractères maximum par ligne
-  }) : super(key: key);
+  LCDScreenWidget({required this.maxCharactersPerLine, required this.mqttService});
 
   @override
-  _LCDWidgetState createState() => _LCDWidgetState();
+  _LCDScreenWidgetState createState() => _LCDScreenWidgetState();
 }
 
-class _LCDWidgetState extends State<LCDWidget> {
-  String textLine1 = ''; // Texte affiché sur la ligne 1
-  String textLine2 = ''; // Texte affiché sur la ligne 2
-  final FocusNode _focusNode = FocusNode(); // Pour gérer le focus
-  final TextEditingController _controller = TextEditingController();
+class _LCDScreenWidgetState extends State<LCDScreenWidget> {
+  late String textLine1 = "";
+  late String textLine2 = "";
+  final _focusNode = FocusNode();
+  final _controller = TextEditingController();
+  final MqttService mqttService = MqttService();
 
   void _updateText(String value) {
     setState(() {
       if (value.length > widget.maxCharactersPerLine) {
-        // Répartir les caractères entre les deux lignes
         textLine1 = value.substring(0, widget.maxCharactersPerLine);
         textLine2 = value.substring(
           widget.maxCharactersPerLine,
@@ -31,11 +30,16 @@ class _LCDWidgetState extends State<LCDWidget> {
               : value.length,
         );
       } else {
-        // Si moins de 16 caractères, tout va sur la première ligne
         textLine1 = value;
         textLine2 = '';
       }
+      _publishToMqtt(textLine1, textLine2); // Publiez le texte mis à jour
     });
+  }
+
+  void _publishToMqtt(String line1, String line2) {
+    final message = '$line1\n$line2';
+    widget.mqttService.publishMessage('SET/LCD_DISPLAY', message); 
   }
 
   @override
@@ -49,7 +53,6 @@ class _LCDWidgetState extends State<LCDWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Donner le focus au champ invisible
         _focusNode.requestFocus();
       },
       child: Column(

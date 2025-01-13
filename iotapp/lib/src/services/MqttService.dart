@@ -2,11 +2,11 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 class MqttService {
-  final String broker = '61fc7071f01749b5a874046c95a0f08d.s1.eu.hivemq.cloud'; // Remplacez par votre domaine HiveMQ Cloud
+  final String broker = 'b5f2bf8397624117be2142697084afa1.s1.eu.hivemq.cloud'; // Remplacez par votre domaine HiveMQ Cloud
   final int port = 8883; // Port sécurisé pour TLS
   final String clientIdentifier = 'flutter_client'; // Identifiant unique
-  final String username = 'flutter_user'; // Remplacez par votre nom d'utilisateur HiveMQ
-  final String password = 'Flutteruser1'; // Remplacez par votre mot de passe HiveMQ
+  final String username = 'nicolas'; // Remplacez par votre nom d'utilisateur HiveMQ
+  final String password = 'Abcd1234'; // Remplacez par votre mot de passe HiveMQ
 
   late MqttServerClient client;
 

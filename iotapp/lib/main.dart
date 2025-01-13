@@ -4,10 +4,12 @@ import 'package:iotapp/src/settings/setting.dart';
 import 'package:iotapp/src/widgets/iconValueWidget/iconValueWidget.dart';
 import 'package:iotapp/src/widgets/statusWidget/statusWidget.dart';
 import 'package:iotapp/src/widgets/textUrlWidget/textUrlWidget.dart';
-
-import 'src/widgets/LCDScreenWidget/LCDScreenWidget.dart';
-import 'src/widgets/dynamiqueEquipment/dynamiqueEquipment.dart';
+import 'package:iotapp/src/widgets/boutonWidget/boutonWidget.dart';
+import 'package:iotapp/src/widgets/LCDScreenWidget/LCDScreenWidget.dart';
 import 'package:iotapp/src/services/Apiservice.dart';
+import 'package:iotapp/src/widgets/TabBarWidget/TabBarWidget.dart';
+import 'package:local_auth/local_auth.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -21,34 +23,102 @@ class MyApp extends StatelessWidget {
       title: 'IOT APP',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromRGBO(47, 80, 52, 1),
-            brightness: Brightness.dark,
-            contrastLevel: 1.0),
+          seedColor: const Color.fromRGBO(47, 80, 52, 1),
+          brightness: Brightness.dark,
+          contrastLevel: 1.0,
+        ),
         useMaterial3: true,
       ),
-      home: MyHomePage(title: 'IOT Application'),
+      home: BiometricAuthScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-// ignore: must_be_immutable
-class MyHomePage extends StatefulWidget {
-  MyHomePage({super.key, required this.title});
-
-  final String title;
+class BiometricAuthScreen extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _BiometricAuthScreenState createState() => _BiometricAuthScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  final MqttService mqttService = MqttService();
-  bool isConnected = false;
-  String connectionStatus = "Connexion en cours...";
+class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
+  final LocalAuthentication auth = LocalAuthentication();
+  bool _isAuthenticated = false;
+
+  Future<void> _authenticate() async {
+    try {
+      final bool authenticated = await auth.authenticate(
+        localizedReason: 'Veuillez vous authentifier pour accéder à l\'application',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          biometricOnly: true,
+        ),
+      );
+      setState(() {
+        _isAuthenticated = authenticated;
+      });
+      if (authenticated) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyHomePage(title: 'IOT Application')),
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    _authenticate();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Authentification Biométrique'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              _isAuthenticated ? 'Authentifié avec succès!' : 'Non authentifié',
+              style: TextStyle(fontSize: 24),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _authenticate,
+              child: Text('Authentifier'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
+  final MqttService mqttService = MqttService();
+  late TabController _tabController;
+  bool isConnected = false;
+  String connectionStatus = "Connexion en cours...";
+  final ApiService apiService = ApiService('https://iot-data-engineers-server.onrender.com');
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this); // 3 onglets : STAT, DATA, ROUTINE
     _connectToBroker();
   }
 
@@ -66,38 +136,38 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
   }
+
   Future<String> fetchHumidityValue(String equipmentId) async {
     final data = await apiService.fetchEquipmentData(equipmentId);
-    return '${data['value']} ${data['unit']}'; // Récupère la valeur et l'unité
+    return '${data['value']} ${data['unit']}';
   }
+
   Future<String> fetchTemperatureValue(String equipmentId) async {
     final data = await apiService.fetchEquipmentData(equipmentId);
-    return '${data['value']} ${data['unit']}'; // Exemple de valeur pour la température
+    return '${data['value']} ${data['unit']}';
   }
-  ApiService apiService = ApiService('https://iot-data-engineers-server.onrender.com');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(47, 80, 52, 1),
-      // backgroundColor: const Color.fromARGB(59, 124, 124, 124),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: <Widget>[
+      body: Column(
+        children: [
           // Titre principal
-          Center(
-            child: Text(
-              widget.title,
-              style: const TextStyle(
-                fontFamily: 'PipBoyFont',
-                fontSize: 20,
-                color: Color(0xFF00FF00), // Vert fluo typique
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Center(
+              child: Text(
+                widget.title,
+                style: const TextStyle(
+                  fontFamily: 'PipBoyFont',
+                  fontSize: 20,
+                  color: Color(0xFF00FF00),
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 20),
-
-          // Indication de l'état de connexion
+          // Indication de connexion
           Center(
             child: Text(
               connectionStatus,
@@ -109,133 +179,114 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
 
           // Écran LCD
-          const Center(
-            child: LCDWidget(), // Ajout de l'écran LCD
+          Center(
+            child: LCDScreenWidget(
+              maxCharactersPerLine: 20,
+              mqttService: mqttService,
+            ), // Ajout de l'écran LCD
           ),
           const SizedBox(height: 20),
 
           // Widgets température et humidité
-           Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               IconValueWidget(
                 icon: Icons.water_drop,
-                futureValue: fetchHumidityValue('67298243-00e1-46fb-b94e-228c8d3e675b'),
+                fetchValue: () => fetchHumidityValue('67298243-00e1-46fb-b94e-228c8d3e675b'),
                 iconColor: Colors.blue,
               ),
               // Widget pour la température
-            IconValueWidget(
-              icon: Icons.thermostat,
-              futureValue: fetchTemperatureValue('b8fe322b-5549-4627-990a-e62a6c43e381'),
-              iconColor: Colors.red,
-            ),
+              IconValueWidget(
+                icon: Icons.thermostat,
+                fetchValue: () => fetchTemperatureValue('b8fe322b-5549-4627-990a-e62a6c43e381'),
+                iconColor: Colors.red,
+              ),
             ],
           ),
-         
-          // Boutons et leurs textes associés
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+
+          // TabBar ajoutée via TabBarWidget
+          TabBarWidget(
+            tabController: _tabController,
+            tabs: const ['ACTION', 'DONNÉES', 'ROUTINE'], // Onglets
+          ),
+
+          // TabBarView pour afficher le contenu des onglets
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
+                // Onglet STAT
+                ListView(
+                  padding: const EdgeInsets.all(20),
                   children: [
-                    StatusWidget(
-                      label: "Turn On",
-                      initialStatus: false,
-                      buttonColor: Colors.purple,
-                      widthButton: 200,
-                      heightButton: 60,
-                      onPressed: () {
-                        mqttService.publishMessage('home/lights', 'on');
-                      },
-                      mqttService: mqttService,
+                    ButtonGroupWidget(
+                      buttonConfigs: [
+                        {
+                          'label': "Turn On",
+                          'initialStatus': false,
+                          'buttonColor': Colors.purple,
+                          'widthButton': 200.0,
+                          'heightButton': 60.0,
+                          'onPressed': null,
+                          'mqttService': mqttService,
+                          'text': "C'est pas Versailles ici",
+                          'topic': "SET/LED",
+                          'message': ["HIGH", "LOW"],
+                        },
+                      ],
                     ),
-                    const SizedBox(width: 10),
-                    const Text("C'est pas Versailles ici",
-                      style: TextStyle(
-                        fontFamily: 'PipBoyFont',
-                        color: Color(0xFF00FF00), // Vert fluo typique
-                        backgroundColor: Color.fromARGB(38, 0, 255, 0), // Fond 
-                      ),
-                    ),
-                    
                   ],
                 ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
+                // Onglet DATA
+                ListView(
+                  padding: const EdgeInsets.all(20),
                   children: [
-                    StatusWidget(
-                      label: "",
-                      initialStatus: true,
-                      buttonColor: Colors.purple,
-                      widthButton: Setting.sizeLarge,
-                      heightButton: Setting.sizeMedium,
-                      onPressed: () {
-                        mqttService.publishMessage('routine/start', 'start');
-                      },
-                      mqttService: mqttService,
+                    ButtonGroupWidget(
+                      buttonConfigs: [
+                        {
+                          'label': "Turn On",
+                          'initialStatus': false,
+                          'buttonColor': Colors.purple,
+                          'widthButton': 200.0,
+                          'heightButton': 60.0,
+                          'onPressed': null,
+                          'mqttService': mqttService,
+                          'text': "C'est pas Versailles ici",
+                          'topic': "SET/LED",
+                          'message': ["HIGH", "LOW"],
+                        },
+                      ],
                     ),
-                    const SizedBox(width: 10),
-                    const Text("Programme Routingue",
-                      style: TextStyle(
-                        fontFamily: 'PipBoyFont',
-                        color: Color(0xFF00FF00), // Vert fluo typique
-                        backgroundColor: Color.fromARGB(38, 0, 255, 0), // Fond 
-                      ),
-                      ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
+                // Onglet ROUTINE
+                ListView(
+                  padding: const EdgeInsets.all(20),
                   children: [
-                    StatusWidget(
-                      label: "",
-                      initialStatus: true,
-                      buttonColor: Colors.purple,
-                      widthButton: Setting.sizeLarge,
-                      heightButton: Setting.sizeMedium,
-                      onPressed: () {
-                        mqttService.publishMessage('vacation/start', 'start');
-                      },
-                      mqttService: mqttService,
-                    ),
-                    const SizedBox(width: 20),
-                    const Text("Programme Vacance",
-                      style: TextStyle(
-                        fontFamily: 'PipBoyFont',
-                        color: Color(0xFF00FF00), // Vert fluo typique
-                        backgroundColor: Color.fromARGB(38, 0, 255, 0), // Fond 
-                      ),
+                    ButtonGroupWidget(
+                      buttonConfigs: [
+                        {
+                          'label': "Routine jour",
+                          'initialStatus': true,
+                          'buttonColor': Colors.purple,
+                          'widthButton': Setting.sizeLarge,
+                          'heightButton': Setting.sizeMedium,
+                          'onPressed': null,
+                          'mqttService': mqttService,
+                          'text': "Programme Routine de jour",
+                          'topic': "TRIGGER/ROUTINE",
+                          'message': ["DAY_MODE", "NIGHT_MODE"],
+                        },
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Liens GitHub et Figma
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextUrlWidget(
-                label: "Lien Github",
-                url: "https://github.com/QuentinKevin/IOT-Application-Flutter",
-              ),
-              SizedBox(width: 20),
-              TextUrlWidget(
-                label: "Lien Figma",
-                url:
-                    "https://www.figma.com/design/JfYg0CGDHf6rhzzkOCydZv/IOT-Application?node-id=13-61&node-type=instance&t=syIlL1rSvyzmCFA0-0",
-              ),
-            ],
           ),
         ],
       ),
@@ -245,6 +296,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     mqttService.disconnect();
+    _tabController.dispose();
     super.dispose();
   }
 }
