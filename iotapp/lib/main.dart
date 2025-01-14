@@ -147,6 +147,17 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     return '${data['value']} ${data['unit']}';
   }
 
+  Future<String> fetchGASValue(String equipmentId) async {
+    final data = await apiService.fetchEquipmentData(equipmentId);
+    return '${data['value']}';
+  }
+
+  Future<String> fetchSTEAMValue(String equipmentId) async {
+    final data = await apiService.fetchEquipmentData(equipmentId);
+    return '${data['value']}';
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -233,18 +244,12 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                           'heightButton': 60.0,
                           'onPressed': null,
                           'mqttService': mqttService,
-                          'text': "C'est pas Versailles ici",
+                          'text': "Lumière",
                           'topic': "SET/LED",
                           'message': ["HIGH", "LOW"],
                         },
                       ],
                     ),
-                  ],
-                ),
-                // Onglet DATA
-                ListView(
-                  padding: const EdgeInsets.all(20),
-                  children: [
                     ButtonGroupWidget(
                       buttonConfigs: [
                         {
@@ -255,14 +260,88 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                           'heightButton': 60.0,
                           'onPressed': null,
                           'mqttService': mqttService,
-                          'text': "C'est pas Versailles ici",
-                          'topic': "SET/LED",
-                          'message': ["HIGH", "LOW"],
+                          'text': "Allarme",
+                          'topic': "SET/BUZZER",
+                          'message': ["9600", "0"],
+                        },
+                      ],
+                    ),
+                    ButtonGroupWidget(
+                      buttonConfigs: [
+                        {
+                          'label': "Turn On",
+                          'initialStatus': false,
+                          'buttonColor': Colors.purple,
+                          'widthButton': 200.0,
+                          'heightButton': 60.0,
+                          'onPressed': null,
+                          'mqttService': mqttService,
+                          'text': "Warning",
+                          'topic': "SET/RGB_LED",
+                          'message': ["255,0,0", "0,0,0"],
+                        },
+                      ],
+                    ),
+                    ButtonGroupWidget(
+                      buttonConfigs: [
+                        {
+                          'label': "Turn On",
+                          'initialStatus': false,
+                          'buttonColor': Colors.purple,
+                          'widthButton': 200.0,
+                          'heightButton': 60.0,
+                          'onPressed': null,
+                          'mqttService': mqttService,
+                          'text': "Porte",
+                          'topic': "SET/DOOR_SERVO",
+                          'message': ["180", "0"],
+                        },
+                      ],
+                    ),
+                    ButtonGroupWidget(
+                      buttonConfigs: [
+                        {
+                          'label': "Turn On",
+                          'initialStatus': false,
+                          'buttonColor': Colors.purple,
+                          'widthButton': 200.0,
+                          'heightButton': 60.0,
+                          'onPressed': null,
+                          'mqttService': mqttService,
+                          'text': "VEntilateur",
+                          'topic': "SET/FAN",
+                          'message': ["180", "0"],
                         },
                       ],
                     ),
                   ],
                 ),
+                // Onglet DATA
+                  Column(
+                    children: <Widget>[
+                      IconValueWidget(
+                        icon: Icons.water_drop,
+                        fetchValue: () => fetchGASValue("084c778c-4aa3-4f86-9782-2d9cebd443e3"),
+                        iconColor: Colors.blue,
+                      ),
+                      // Widget pour la température
+                      IconValueWidget(
+                        icon: Icons.thermostat,
+                        fetchValue: () => fetchSTEAMValue('e380e232-a1e3-43f7-8598-e6ee82f1d765'),
+                        iconColor: Colors.red,
+                      ),
+                      IconValueWidget(
+                        icon: Icons.water_drop,
+                        fetchValue: () => fetchHumidityValue('67298243-00e1-46fb-b94e-228c8d3e675b'),
+                        iconColor: Colors.blue,
+                      ),
+                      IconValueWidget(
+                        icon: Icons.thermostat,
+                        fetchValue: () => fetchTemperatureValue('b8fe322b-5549-4627-990a-e62a6c43e381'),
+                        iconColor: Colors.red,
+                      ),
+                    ],
+                  ),
                 // Onglet ROUTINE
                 ListView(
                   padding: const EdgeInsets.all(20),
@@ -277,7 +356,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                           'heightButton': Setting.sizeMedium,
                           'onPressed': null,
                           'mqttService': mqttService,
-                          'text': "Programme Routine de jour",
+                          'text': "Routine de jour",
                           'topic': "TRIGGER/ROUTINE",
                           'message': ["DAY_MODE", "NIGHT_MODE"],
                         },

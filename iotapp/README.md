@@ -1,16 +1,42 @@
-# iotapp
+# IOT Application Flutter
 
-A new Flutter project.
+## Comment Utiliser l'application
 
-## Getting Started
+### Installation du projet
 
-This project is a starting point for a Flutter application.
+1. Clonez le dépôt :
+    ```sh
+    git clone https://github.com/QuentinKevin/IOT-Application-Flutter.git
+    cd IOT-Application-Flutter/iotapp
+    ```
 
-A few resources to get you started if this is your first Flutter project:
+2. Installez les dépendances :
+    ```sh
+    flutter pub get
+    ```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+3. Exécutez l'application :
+    ```sh
+    flutter run
+    ```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Structure du projet
+
+Le projet est structuré comme suit :
+
+### Développement
+
+Pour développer et tester l'application, vous pouvez utiliser les commandes Flutter habituelles :
+
+- Pour exécuter les tests :
+    ```sh
+    flutter test
+    ```
+
+- Pour analyser le code :
+    ```sh
+    flutter analyze
+    ```
+
+
+
