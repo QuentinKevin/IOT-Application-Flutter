@@ -73,3 +73,8 @@ Pour développer et tester l'application, vous pouvez utiliser les commandes Flu
 - `Setting`: Contient les paramètres de configuration tels que les tailles des boutons.
 
 Pour plus de détails, consultez le code source dans le répertoire `lib/`.
+
+### Choix et difficultés
+
+ - Il n'y a pas eu de diffculté lors du développement.
+ - Nous avons été guidé sur les choix technologiques
