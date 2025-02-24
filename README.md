@@ -77,4 +77,4 @@ Pour plus de détails, consultez le code source dans le répertoire `lib/`.
 ### Choix et difficultés
 
  - Il n'y a pas eu de diffculté lors du développement.
- - Nous avons été guidé sur les choix technologiques
+ - Nous avons utilisé l'empreinte biomètrique pour augmenter la sécurité de l'application
